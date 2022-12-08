@@ -2,7 +2,7 @@
  * This is a sample test suite.
  * Replace this with your implementation.
  */
-
+/*
 import { spawn } from "child_process";
 import SuperTest from "supertest";
 import Path, { dirname } from "path";
@@ -33,3 +33,4 @@ describe("Example Test", function () {
         process.kill(proc.pid || 0, "SIGTERM");
     });
 });
+*/
