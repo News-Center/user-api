@@ -1,4 +1,5 @@
 import ldap from "ldapjs";
+import { logger } from "./utils/logger";
 
 const HOSTNAME = "ldap://ldap.technikum-wien.at";
 const LDAP_PORT = 389;
@@ -20,8 +21,7 @@ export const authUser = async (username: string, password: string): Promise<bool
     });
 
     client.unbind(err => {
-        // eslint-disable-next-line
-        if (err) console.log("ERR: ", err);
+        if (err) logger.info(err);
     });
 
     return !bindErr;

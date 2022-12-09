@@ -6,16 +6,16 @@ help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 up: ## Run a local development environment with Docker Compose.
-	@docker-compose -f ./deployments/dev/docker-compose.yml up --build --force-recreate
+	@docker compose -f ./deployments/dev/docker-compose.yml up --build --force-recreate
 
 recreate: ## Recreate and run development docker compose
-	@docker-compose -f ./deployments/dev/docker-compose.yml up --build --force-recreate
+	@docker compose -f ./deployments/dev/docker-compose.yml up --build --force-recreate
 
 down: ## Stop Docker Compose local development environment.
-	@docker-compose -f ./deployments/dev/docker-compose.yml down
+	@docker compose -f ./deployments/dev/docker-compose.yml down
 
 clean: ## Clean Docker Compose local development environment.
-	@docker-compose -f ./deployments/dev/docker-compose.yml down --remove-orphans --volumes
+	@docker compose -f ./deployments/dev/docker-compose.yml down --remove-orphans --volumes
 
 .PHONY: test
 test: ## Run tests

@@ -115,3 +115,9 @@ dist
 .idea/
 .vscode/
 tools/dev
+
+javascript/**/migrations/
+typescript/**/migrations/
+misc/**/migrations/
+databases/**/migrations/
+experimental/**/*.db

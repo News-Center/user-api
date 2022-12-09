@@ -3,19 +3,16 @@ version: '3.8'
 services:
   dev-app:
     container_name: dev-app
-    image: node:16.14.2
-    working_dir: /app
-    volumes:
-      - ../../:/app
-      - ../../node_modules:/app/node_modules
-      - ../../dist:/app/dist
-    command: bash -c "npm i --quiet --ignore-scripts && npm run start:dev"
-    depends_on:
-      - postgres
-    env_file:
-      - ../../.env
+    restart: always
+    build: . 
     ports:
       - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
   postgres:
     container_name: postgres
     image: postgres:15
@@ -25,7 +22,7 @@ services:
       - db:/var/lib/postgres/data 
     restart: always
     env_file:
-      - ../../.env
+      - .env
   pgadmin: 
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -34,7 +31,7 @@ services:
     ports:
       - "5555:80"
     env_file:
-      - ../../.env
+      - .env
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     logging:
