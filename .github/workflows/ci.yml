@@ -2,12 +2,7 @@ name: ci
 
 on:
   push:
-    branches:
-      - main
-      - '[0-9]+.x'
-      - '*'
-    tags:
-      - '*'
+  pull_requests:
 
 jobs:
   build:
