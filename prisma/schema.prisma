@@ -11,13 +11,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   username String @unique
   tags     Tag[]
 }
 
 model Tag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   value     String   @db.VarChar(255)

@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Config } from "./config";
 import { createServer } from "./app";
 
-const server = createServer({ logger: { transport: { target: "pino-pretty" } } });
+const server = createServer({ logger: true });
 
 server.get("/", async (_, res) => {
     res.send({ msg: "welcome & world" });
