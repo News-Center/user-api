@@ -19,6 +19,7 @@
     "format:check": "prettier \"./**\" --ignore-unknown --check"
   },
   "dependencies": {
+    "@fastify/cors": "^8.2.0",
     "@prisma/client": "^4.7.1",
     "dotenv": "^16.0.0",
     "fastify": "^4.10.2",
