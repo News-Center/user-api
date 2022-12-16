@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { Type } from "@sinclair/typebox";
-import { UserSchema, UserResposeType, LDAPUserSchema, LDAPUserType } from "../../schema/user";
+
+import { UserResposeType, UserResposeSchema, LDAPUserSchema, LDAPUserType } from "../../schema/user";
 import { authUser } from "../../ldap";
 
 export default async function (fastify: FastifyInstance) {
@@ -14,15 +14,10 @@ export default async function (fastify: FastifyInstance) {
                 tags: ["ldap"],
                 body: LDAPUserSchema,
                 response: {
-                    200: Type.Object(
-                        {
-                            valid: Type.Boolean(),
-                            user: Type.Union([UserSchema, Type.Null()]),
-                        },
-                        {
-                            description: "Successful response",
-                        },
-                    ),
+                    200: {
+                        description: "Successfull response",
+                        ...UserResposeSchema,
+                    },
                 },
             },
         },

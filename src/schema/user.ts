@@ -7,19 +7,14 @@ export const LDAPUserSchema = Type.Object({
 
 export type LDAPUserType = Static<typeof LDAPUserSchema>;
 
-export const UserSchema = Type.Object({
+export const UserSchemaWithoutTags = Type.Object({
     id: Type.Optional(Type.String()),
     username: Type.String(),
-    tags: Type.Optional(Type.Array(Type.String())),
 });
 
-export type UserType = Static<typeof UserSchema>;
-
-export const UserResposeSchema = Type.Union([
-    Type.Optional(Type.Array(UserSchema)),
-    Type.Object({
-        valid: Type.Boolean(),
-    }),
-]);
+export const UserResposeSchema = Type.Object({
+    user: Type.Union([UserSchemaWithoutTags, Type.Null()]),
+    valid: Type.Boolean(),
+});
 
 export type UserResposeType = Static<typeof UserResposeSchema>;

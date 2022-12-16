@@ -20,6 +20,6 @@ model Tag {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  value     String   @db.VarChar(255)
+  value     String   @unique @db.VarChar(255)
   users     User[]
 }

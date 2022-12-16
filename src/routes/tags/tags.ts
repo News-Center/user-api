@@ -1,4 +1,16 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
+
+import {
+    TagsResponseType,
+    TagsResponseSchema,
+    TagResponseType,
+    TagResponseSchema,
+    TagParamsType,
+    TagParamsSchema,
+    TagBodySchema,
+    TagBodyType,
+} from "../../schema/tag";
+
 interface BodyType {
     value: string;
 }
@@ -6,35 +18,135 @@ interface BodyType {
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
 
-    fastify.get("/", async () => {
-        const tags = await prisma.tag.findMany();
-        return { tags };
-    });
-
-    fastify.get("/:id", async (req: FastifyRequest<{ Params: { id: string } }>, _) => {
-        const { id } = req.params;
-        const tag = await prisma.tag.findUnique({
-            where: {
-                id: id,
+    fastify.get<{ Reply: TagsResponseType }>(
+        "/",
+        {
+            schema: {
+                description: "Returns all tags in the Database",
+                tags: ["tags"],
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...TagsResponseSchema,
+                    },
+                },
             },
-        });
-        return { tag };
-    });
+        },
+        async (_request, _reply) => {
+            const tags = await prisma.tag.findMany();
+            return { tags };
+        },
+    );
 
-    fastify.post("/", async (req: FastifyRequest<{ Body: BodyType }>) => {
-        const { value } = req.body;
-
-        const tag = await prisma.tag.create({ data: { value: value } });
-        return { tag };
-    });
-
-    fastify.delete("/:id", async (req: FastifyRequest<{ Params: { id: string } }>, _) => {
-        const { id } = req.params;
-        const deletedTag = await prisma.tag.delete({
-            where: {
-                id: id,
+    fastify.get<{ Params: TagParamsType; Reply: TagResponseType }>(
+        "/:id",
+        {
+            schema: {
+                description: "Returns a Tag with the provided id if it exists",
+                tags: ["tags"],
+                params: TagParamsSchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...TagResponseSchema,
+                    },
+                },
             },
-        });
-        return { tag: deletedTag };
-    });
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+            const tag = await prisma.tag.findUnique({
+                where: {
+                    id: id,
+                },
+            });
+            return { tag };
+        },
+    );
+
+    fastify.post<{ Body: TagBodyType; Reply: TagResponseType }>(
+        "/",
+        {
+            schema: {
+                description: "Creates a Tag with the provided value if it does not exist yet",
+                tags: ["tags"],
+                body: TagBodySchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...TagResponseSchema,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { value } = request.body;
+
+            const tag = await prisma.tag.upsert({
+                where: { value },
+                update: {},
+                create: { value },
+            });
+
+            return { tag };
+        },
+    );
+
+    fastify.delete<{ Params: TagParamsType; Reply: TagResponseType }>(
+        "/:id",
+        {
+            schema: {
+                description: "Delete a tag by its ID if it exists",
+                tags: ["tags"],
+                params: TagParamsSchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...TagResponseSchema,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+            const deletedTag = await prisma.tag.delete({
+                where: {
+                    id: id,
+                },
+            });
+            return { tag: deletedTag };
+        },
+    );
+
+    fastify.patch<{ Body: TagBodyType; Params: TagParamsType; Reply: TagResponseType }>(
+        "/:id",
+        {
+            schema: {
+                description: "Update a Tag by its ID if it exists",
+                tags: ["tags"],
+                params: TagParamsSchema,
+                body: TagBodySchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...TagResponseSchema,
+                    },
+                },
+            },
+        },
+        async (req: FastifyRequest<{ Params: { id: string }; Body: BodyType }>, _) => {
+            const { id } = req.params;
+            const { value } = req.body;
+
+            const patchedTag = await prisma.tag.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    value,
+                },
+            });
+            return { tag: patchedTag };
+        },
+    );
 }
