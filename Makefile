@@ -5,17 +5,18 @@ SHELL := /bin/bash
 help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-up: ## Run a local development environment with Docker Compose.
-	@docker compose -f ./deployments/dev/docker-compose.yml up --build --force-recreate
+
+up: ## Run a local development environment with the new Docker Compose.
+	@docker compose up -d --build --force-recreate && npm run start:dev
+
+down: ## Stop the new Docker Compose local development environment.
+	@docker compose down -d && npm run start:dev
 
 recreate: ## Recreate and run development docker compose
-	@docker compose -f ./deployments/dev/docker-compose.yml up --build --force-recreate
-
-down: ## Stop Docker Compose local development environment.
-	@docker compose -f ./deployments/dev/docker-compose.yml down
+	@docker compose up --build --force-recreate && npm run start:dev
 
 clean: ## Clean Docker Compose local development environment.
-	@docker compose -f ./deployments/dev/docker-compose.yml down --remove-orphans --volumes
+	@docker compose down --remove-orphans --volumes
 
 .PHONY: test
 test: ## Run tests
