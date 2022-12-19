@@ -1,6 +1,6 @@
 # User Api
 
-The User-API is to manage user data
+The User-API is used to manage user data
 
 ## Getting Started
 
