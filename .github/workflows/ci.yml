@@ -1,12 +1,6 @@
 name: ci
 
-on:
-  push:
-    branches:
-      - main
-      - '[0-9]+.x'
-    tags:
-      - '*'
+on: [pull_request, push]
 
 jobs:
   build:

@@ -1,18 +1,6 @@
 version: '3.8'
 
 services:
-  dev-app:
-    container_name: dev-app
-    restart: always
-    build: . 
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - postgres
   postgres:
     container_name: postgres
     image: postgres:15
