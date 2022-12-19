@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyRequest } from "fastify";
 
 import {
     TagsResponseType,
@@ -10,6 +10,10 @@ import {
     TagBodySchema,
     TagBodyType,
 } from "../../schema/tag";
+
+interface BodyType {
+    value: string;
+}
 
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
@@ -130,9 +134,9 @@ export default async function (fastify: FastifyInstance) {
                 },
             },
         },
-        async (request, _reply) => {
-            const { id } = request.params;
-            const { value } = request.body;
+        async (req: FastifyRequest<{ Params: { id: string }; Body: BodyType }>, _) => {
+            const { id } = req.params;
+            const { value } = req.body;
 
             const patchedTag = await prisma.tag.update({
                 where: {
