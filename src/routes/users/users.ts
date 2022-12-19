@@ -7,8 +7,8 @@ import {
     UserBodySchema,
     UserTagsType,
     UserTagsSchema,
-    UserAndTagType,
-    UserAndTagsSchema,
+    UsersAndTagsType,
+    UsersAndTagsSchema,
     UserParamsWithTagIdType,
     UserParamsWithTagIdSchema,
 } from "../../schema/user";
@@ -17,7 +17,7 @@ import { UserSchema, UserType } from "../../schema/tagUser";
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
 
-    fastify.get<{ Reply: UserAndTagType }>(
+    fastify.get<{ Reply: UsersAndTagsType }>(
         "/",
         {
             schema: {
@@ -26,7 +26,7 @@ export default async function (fastify: FastifyInstance) {
                 response: {
                     200: {
                         description: "Successful response",
-                        ...UserAndTagsSchema,
+                        ...UsersAndTagsSchema,
                     },
                 },
             },

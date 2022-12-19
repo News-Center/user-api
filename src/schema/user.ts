@@ -20,49 +20,37 @@ export const UserResposeSchema = Type.Object({
 
 export type UserResposeType = Static<typeof UserResposeSchema>;
 
-//Dieses Schema wird für Params verwendet, wo die id vom User notwendig ist
 export const UserParamsSchema = Type.Object({
     id: Type.String(),
 });
 
 export type UserParamsType = Static<typeof UserParamsSchema>;
 
-export const UserParamsWithTagIdSchema = Type.Object({
-    id: Type.String(),
-    tid: Type.String(),
-});
+export const UserParamsWithTagIdSchema = Type.Intersect([
+    UserParamsSchema,
+    Type.Object({
+        tid: Type.String(),
+    }),
+]);
 
 export type UserParamsWithTagIdType = Static<typeof UserParamsWithTagIdSchema>;
 
-//Dieses Schema wird verwendet um die ID von einem Tag darzustellen
-export const UserValueSchema = Type.Object({
-    id: Type.String(),
-});
-
-//Wird verwendet um den body vom request als Array darzustellen
 export const UserBodySchema = Type.Object({
-    value: Type.Array(UserValueSchema),
+    value: Type.Array(UserParamsSchema),
 });
 
 export type UserBodyType = Static<typeof UserBodySchema>;
 
-export const TagSchema = Type.Object({
-    id: Type.Optional(Type.String()),
-    createdAt: Type.Optional(Type.Union([Type.String(), Type.Date()])),
-    updatedAt: Type.Optional(Type.Union([Type.String(), Type.Date()])),
-    value: Type.String(),
-});
-
 export const UserTagsSchema = Type.Union([
     Type.Object({
-        tags: Type.Array(TagSchema),
+        tags: Type.Array(TagWithoutUsersSchema),
     }),
     Type.Null(),
 ]);
 
 export type UserTagsType = Static<typeof UserTagsSchema>;
 
-export const UserAndTagsSchema = Type.Union([
+export const UsersAndTagsSchema = Type.Union([
     Type.Object({
         users: Type.Array(
             Type.Intersect([
@@ -74,4 +62,4 @@ export const UserAndTagsSchema = Type.Union([
     Type.Null(),
 ]);
 
-export type UserAndTagType = Static<typeof UserAndTagsSchema>;
+export type UsersAndTagsType = Static<typeof UsersAndTagsSchema>;
