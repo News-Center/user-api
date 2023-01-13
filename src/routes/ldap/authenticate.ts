@@ -24,8 +24,13 @@ export default async function (fastify: FastifyInstance) {
         async (request, _reply) => {
             const { username, password } = request.body;
             const authResponse = await authUser(username, password);
+
             if (authResponse) {
-                const createdUser = await prisma.user.create({ data: { username } });
+                const createdUser = await prisma.user.upsert({
+                    where: { username },
+                    update: {},
+                    create: { username },
+                });
                 return { valid: authResponse, user: createdUser };
             }
             return { valid: authResponse, user: null };

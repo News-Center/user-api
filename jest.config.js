@@ -1,5 +1,4 @@
 import "dotenv/config";
-
 const isCI = process.env.CI === "true";
 
 export default {
