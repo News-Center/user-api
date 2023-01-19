@@ -15,7 +15,6 @@ COPY ./src ./src
 
 # Installs all packages
 RUN npm install
-RUN npx prisma generate
 
 # Runs the dev npm script to build & start the server
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:dev:migrate"]
