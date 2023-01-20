@@ -1,4 +1,7 @@
 import { FastifyInstance } from "fastify";
+import getUserById from "../../helper/user/getUserById";
+import disconnectTagsFromUser from "../../helper/user/disconnectTagsFromUser";
+import connectTagsToUser from "../../helper/user/connectTagsToUser";
 
 import {
     UserParamsType,
@@ -150,32 +153,20 @@ export default async function (fastify: FastifyInstance) {
         async (request, _reply) => {
             const { id } = request.params;
             const { value } = request.body;
+            const user = await getUserById(fastify, id);
 
-            for (const tags of value) {
-                await prisma.user.update({
-                    where: {
-                        id: id,
-                    },
-                    data: {
-                        tags: {
-                            connect: {
-                                id: tags.id,
-                            },
-                        },
-                    },
-                });
-            }
+            if (!user?.tags) return;
 
-            const user = await prisma.user.findUnique({
-                where: {
-                    id: id,
-                },
-                include: {
-                    tags: true,
-                },
-            });
+            const ids = user.tags.map(tag => tag.id);
 
-            return user;
+            await disconnectTagsFromUser(fastify, id, ids);
+            await connectTagsToUser(
+                fastify,
+                id,
+                value.map(ids => ids.id),
+            );
+
+            return await getUserById(fastify, id);
         },
     );
 
