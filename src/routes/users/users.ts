@@ -1,7 +1,5 @@
 import { FastifyInstance } from "fastify";
-import getUserById from "../../helper/user/getUserById";
-import disconnectTagsFromUser from "../../helper/user/disconnectTagsFromUser";
-import connectTagsToUser from "../../helper/user/connectTagsToUser";
+import * as userHelper from "../../helper/user/index";
 
 import {
     UserParamsType,
@@ -153,20 +151,18 @@ export default async function (fastify: FastifyInstance) {
         async (request, _reply) => {
             const { id } = request.params;
             const { value } = request.body;
-            const user = await getUserById(fastify, id);
 
-            if (!user?.tags) return;
+            const user = await userHelper.getUserById(fastify, id);
 
-            const ids = user.tags.map(tag => tag.id);
+            if (user?.tags) {
+                await userHelper.disconnectTagsFromUser(fastify, id);
+            }
 
-            await disconnectTagsFromUser(fastify, id, ids);
-            await connectTagsToUser(
+            return await userHelper.connectTagsToUser(
                 fastify,
                 id,
                 value.map(ids => ids.id),
             );
-
-            return await getUserById(fastify, id);
         },
     );
 
