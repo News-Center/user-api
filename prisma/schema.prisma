@@ -1,25 +1,43 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User {
-  id       String @id @default(uuid())
-  username String @unique
-  tags     Tag[]
-}
 
 model Tag {
-  id        String   @id @default(uuid())
+  id       Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  value     String   @unique @db.VarChar(255)
+  users      User[]
+}
+
+model User {
+  id       Int @id @default(autoincrement())
+  username String @unique
+  tags      Tag[]
+  channels UserOnChannel[]
+}
+
+model Channel {
+  id Int @id @default(autoincrement())
+  name String @unique
+  url String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  value     String   @unique @db.VarChar(255)
-  users     User[]
+  users UserOnChannel[]
+}
+
+model UserOnChannel {
+    @@id([userId, channelId])
+    handle String
+    userId Int
+    channelId Int
+    user User @relation(fields: [userId], references: [id])
+    channel Channel @relation(fields: [channelId], references: [id])
 }
