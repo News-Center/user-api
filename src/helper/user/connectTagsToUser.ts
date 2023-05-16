@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { UserType } from "src/schema/tagUser";
 
-const connectTagsToUser = async (fastify: FastifyInstance, userId: string, tags: string[]): Promise<UserType> => {
+const connectTagsToUser = async (fastify: FastifyInstance, userId: number, tags: number[]): Promise<UserType> => {
     const { prisma } = fastify;
 
     if (!tags) {

@@ -36,6 +36,7 @@ export default async function (fastify: FastifyInstance) {
             const users = await prisma.user.findMany({
                 include: {
                     tags: true,
+                    channels: false,
                 },
             });
 

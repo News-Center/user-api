@@ -81,7 +81,7 @@ export default async function (fastify: FastifyInstance) {
             const tag = await prisma.tag.upsert({
                 where: { value },
                 update: {},
-                create: { value },
+                create: { value, updatedAt: new Date() },
             });
 
             return { tag };

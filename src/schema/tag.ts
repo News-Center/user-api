@@ -1,7 +1,7 @@
 import { Static, Type } from "@sinclair/typebox";
 
 export const TagWithoutUsersSchema = Type.Object({
-    id: Type.Optional(Type.String()),
+    id: Type.Optional(Type.Integer()),
     createdAt: Type.Optional(Type.Union([Type.String(), Type.Date()])),
     updatedAt: Type.Optional(Type.Union([Type.String(), Type.Date()])),
     value: Type.String(),
@@ -22,7 +22,7 @@ export const TagResponseSchema = Type.Object({
 export type TagResponseType = Static<typeof TagResponseSchema>;
 
 export const TagParamsSchema = Type.Object({
-    id: Type.String(),
+    id: Type.Integer(),
 });
 
 export type TagParamsType = Static<typeof TagParamsSchema>;

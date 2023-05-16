@@ -9,7 +9,7 @@ export const LDAPUserSchema = Type.Object({
 export type LDAPUserType = Static<typeof LDAPUserSchema>;
 
 export const UserSchemaWithoutTags = Type.Object({
-    id: Type.Optional(Type.String()),
+    id: Type.Optional(Type.Integer()),
     username: Type.String(),
 });
 
@@ -21,7 +21,7 @@ export const UserResposeSchema = Type.Object({
 export type UserResposeType = Static<typeof UserResposeSchema>;
 
 export const UserParamsSchema = Type.Object({
-    id: Type.String(),
+    id: Type.Integer(),
 });
 
 export type UserParamsType = Static<typeof UserParamsSchema>;
@@ -29,7 +29,7 @@ export type UserParamsType = Static<typeof UserParamsSchema>;
 export const UserParamsWithTagIdSchema = Type.Intersect([
     UserParamsSchema,
     Type.Object({
-        tid: Type.String(),
+        tid: Type.Integer(),
     }),
 ]);
 
