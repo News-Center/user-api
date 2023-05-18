@@ -26,6 +26,13 @@ export const UserParamsSchema = Type.Object({
 
 export type UserParamsType = Static<typeof UserParamsSchema>;
 
+export const UserChannelParamsSchema = Type.Object({
+    id: Type.Integer(),
+    cid: Type.Integer(),
+});
+
+export type UserChannelParamsType = Static<typeof UserChannelParamsSchema>;
+
 export const UserParamsWithTagIdSchema = Type.Intersect([
     UserParamsSchema,
     Type.Object({
