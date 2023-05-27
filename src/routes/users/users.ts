@@ -58,12 +58,12 @@ export default async function (fastify: FastifyInstance) {
     );
 
     fastify.get<{ Params: UserParamsType; Reply: UserType }>(
-        "/:id/",
+        "/:id",
         {
             schema: {
                 description: "Returns a User with Tag",
                 tags: ["user"],
-                params: UserChannelParamsSchema,
+                params: UserParamsSchema,
                 response: {
                     200: {
                         description: "Successful response",
@@ -88,12 +88,12 @@ export default async function (fastify: FastifyInstance) {
     );
 
     fastify.delete<{ Params: UserParamsType; Reply: UserType }>(
-        "/:id/",
+        "/:id",
         {
             schema: {
                 description: "Deletes a User",
                 tags: ["user"],
-                params: UserChannelParamsSchema,
+                params: UserParamsSchema,
                 response: {
                     200: {
                         description: "Successful response",
@@ -117,12 +117,12 @@ export default async function (fastify: FastifyInstance) {
     );
 
     fastify.get<{ Params: UserParamsType; Reply: UserTagsType }>(
-        "/:id/tags/",
+        "/:id/tags",
         {
             schema: {
                 description: "Returns all Tags of a User",
                 tags: ["user"],
-                params: UserChannelParamsSchema,
+                params: UserParamsSchema,
                 response: {
                     200: {
                         description: "Successful response",
@@ -147,12 +147,12 @@ export default async function (fastify: FastifyInstance) {
     );
 
     fastify.patch<{ Body: UserBodyType; Params: UserParamsType; Reply: UserType }>(
-        "/:id/tags/",
+        "/:id/tags",
         {
             schema: {
                 description: "Add Tags to User",
                 tags: ["user"],
-                params: UserChannelParamsSchema,
+                params: UserParamsSchema,
                 body: UserBodySchema,
                 response: {
                     200: {
@@ -181,7 +181,7 @@ export default async function (fastify: FastifyInstance) {
     );
 
     fastify.delete<{ Params: UserParamsWithTagIdType; Reply: UserType }>(
-        "/:id/tags/:tid/",
+        "/:id/tags/:tid",
         {
             schema: {
                 description: "Removes a Tag from the User",
