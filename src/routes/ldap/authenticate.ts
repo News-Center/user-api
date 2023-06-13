@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
-
 import { UserResposeType, UserResposeSchema, LDAPUserSchema, LDAPUserType } from "../../schema/user";
-import { authUser } from "../../ldap";
+import { authUser, getUserInfo } from "../../ldap";
 
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
@@ -24,13 +23,35 @@ export default async function (fastify: FastifyInstance) {
         async (request, _reply) => {
             const { username, password } = request.body;
             const authResponse = await authUser(username, password);
-
             if (authResponse) {
                 const createdUser = await prisma.user.upsert({
                     where: { username },
                     update: {},
                     create: { username },
                 });
+
+                const userInfo = await getUserInfo(username, password);
+
+                if (userInfo.success) {
+                    userInfo.ous.forEach(async ou => {
+                        await prisma.tag.upsert({
+                            where: { value: ou },
+                            update: {
+                                users: {
+                                    connect: [{ username }],
+                                },
+                            },
+                            create: {
+                                value: ou,
+                                users: {
+                                    connect: [{ username }],
+                                },
+                                isLdap: true,
+                            },
+                        });
+                    });
+                }
+
                 return { valid: authResponse, user: createdUser };
             }
             return { valid: authResponse, user: null };

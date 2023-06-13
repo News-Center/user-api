@@ -5,6 +5,7 @@ export const TagWithoutUsersSchema = Type.Object({
     createdAt: Type.Optional(Type.Union([Type.String(), Type.Date()])),
     updatedAt: Type.Optional(Type.Union([Type.String(), Type.Date()])),
     value: Type.String(),
+    isLdap: Type.Optional(Type.Boolean()),
 });
 
 export type TagWithoutUsersType = Static<typeof TagWithoutUsersSchema>;
