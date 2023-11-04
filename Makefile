@@ -7,10 +7,10 @@ help:
 
 
 up: ## Run a local development environment with the new Docker Compose.
-	@docker compose up -d --build --force-recreate && npm run start:dev
+	@docker compose up -d --build --force-recreate && npm run migrate && npm run seed && npm run start:dev
 
 down: ## Stop the new Docker Compose local development environment.
-	@docker compose down  
+	@docker compose down
 
 recreate: ## Recreate and run development docker compose
 	@docker compose up --build --force-recreate && npm run start:dev

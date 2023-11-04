@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node dist/main.js",
     "start:dev": "nodemon --ext js,ts,json,env --exec 'node --experimental-modules --experimental-specifier-resolution=node --loader ts-node/esm' src/main.ts | npx pino-pretty",
-    "start:dev:migrate": "prisma migrate dev && npm run start:dev",
+    "seed": "node prisma/seed.js",
+    "migrate": "prisma migrate dev",
+    "start:dev:migrate": "prisma migrate dev && npm run seed && npm run start:dev",
     "start:win":"node --experimental-modules --experimental-specifier-resolution=node --loader ts-node/esm src/main.ts | npx pino-pretty",
     "prepare": "husky install",
     "build": "tsc --project tsconfig.build.json",
