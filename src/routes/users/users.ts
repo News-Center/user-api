@@ -22,7 +22,7 @@ import {
     UserPreferredTimeBodySchema,
 } from "../../schema/user";
 
-import { UserSchema, UserType } from "../../schema/tagUser";
+import { UserSchema, UserType, UserWithPhasesSchema, UserWithPhasesType } from "../../schema/tagUser";
 import {
     ChannelsOnUserResponseType,
     ChannelsOnUserSchema,
@@ -467,6 +467,40 @@ export default async function (fastify: FastifyInstance) {
             if (phases === null) return { phases: null };
 
             return phases;
+        },
+    );
+
+    fastify.patch<{ Body: UserBodyType; Params: UserParamsType; Reply: UserWithPhasesType }>(
+        "/:id/phases",
+        {
+            schema: {
+                description: "Add phases to user",
+                tags: ["user", "phase"],
+                params: UserParamsSchema,
+                body: UserBodySchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...UserWithPhasesSchema,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+            const { value } = request.body;
+
+            const user = await userHelper.getUserWithPhaseById(fastify, id);
+
+            if (user?.phases) {
+                await userHelper.disconnectPhasesFromUser(fastify, id);
+            }
+
+            return await userHelper.connectPhasesToUser(
+                fastify,
+                id,
+                value.map(ids => ids.id),
+            );
         },
     );
 
