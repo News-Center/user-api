@@ -18,6 +18,8 @@ import {
     UserResposeSchema,
     UserAutoSubscribeBodyType,
     UserAutoSubscribeBodySchema,
+    UserPreferredTimeBodyType,
+    UserPreferredTimeBodySchema,
 } from "../../schema/user";
 
 import { UserSchema, UserType } from "../../schema/tagUser";
@@ -494,6 +496,40 @@ export default async function (fastify: FastifyInstance) {
                 },
                 data: {
                     autoSubscribe,
+                },
+            });
+
+            return { user, valid: false };
+        },
+    );
+
+    fastify.patch<{ Body: UserPreferredTimeBodyType; Params: UserParamsType; Reply: UserResposeType }>(
+        "/:id/preferredTime",
+        {
+            schema: {
+                description: "Set preferredTime to receive messages",
+                tags: ["user", "phase"],
+                params: UserParamsSchema,
+                body: UserPreferredTimeBodySchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...UserResposeSchema,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+            const { preferredStartTime, preferredEndTime } = request.body;
+
+            const user = await prisma.user.update({
+                where: {
+                    id,
+                },
+                data: {
+                    preferredStartTime,
+                    preferredEndTime,
                 },
             });
 

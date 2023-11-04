@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "preferredEndTime" TIME(1) NOT NULL DEFAULT '2023-11-04 23:00:00 +00:00',
+ADD COLUMN     "preferredStartTime" TIME(1) NOT NULL DEFAULT '2023-11-04 00:00:00 +00:00';

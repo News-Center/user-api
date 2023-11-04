@@ -12,6 +12,8 @@ export const UserSchemaWithoutTags = Type.Object({
     id: Type.Optional(Type.Integer()),
     username: Type.String(),
     autoSubscribe: Type.Optional(Type.Boolean()),
+    preferredStartTime: Type.Optional(Type.Union([Type.String(), Type.Date()])),
+    preferredEndTime: Type.Optional(Type.Union([Type.String(), Type.Date()])),
 });
 
 export const UserResposeSchema = Type.Object({
@@ -54,6 +56,13 @@ export const UserAutoSubscribeBodySchema = Type.Object({
 });
 
 export type UserAutoSubscribeBodyType = Static<typeof UserAutoSubscribeBodySchema>;
+
+export const UserPreferredTimeBodySchema = Type.Object({
+    preferredStartTime: Type.String(),
+    preferredEndTime: Type.String(),
+});
+
+export type UserPreferredTimeBodyType = Static<typeof UserPreferredTimeBodySchema>;
 
 export const UserTagsSchema = Type.Union([
     Type.Object({
