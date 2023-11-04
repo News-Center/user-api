@@ -16,7 +16,7 @@ import {
     UserParamsSchema,
 } from "../../schema/user";
 
-import { UserSchema, UserType } from "../../schema/tagUser";
+import { UserSchema, UserType, UserWithPhasesSchema, UserWithPhasesType } from "../../schema/tagUser";
 import {
     ChannelsOnUserResponseType,
     ChannelsOnUserSchema,
@@ -27,6 +27,8 @@ import {
     ChannelOnUserSchema,
     ChannelOnUserType,
 } from "../../schema/channel";
+
+import { PhasesResponseSchema, PhasesResponseType } from "../../schema/phase";
 
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
@@ -426,6 +428,73 @@ export default async function (fastify: FastifyInstance) {
                 userId: userOnChannel.userId,
                 channelId: userOnChannel.channelId,
             });
+        },
+    );
+
+    fastify.get<{ Params: UserParamsType; Reply: PhasesResponseType }>(
+        "/:id/phases",
+        {
+            schema: {
+                description: "Returns a User with Tag",
+                tags: ["user"],
+                params: UserParamsSchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...PhasesResponseSchema,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+
+            const phases = await prisma.user.findUnique({
+                where: {
+                    id: id,
+                },
+                select: {
+                    phases: true,
+                },
+            });
+
+            if (phases === null) return { phases: null };
+
+            return phases;
+        },
+    );
+
+    fastify.patch<{ Body: UserBodyType; Params: UserParamsType; Reply: UserWithPhasesType }>(
+        "/:id/phases",
+        {
+            schema: {
+                description: "Add phases to user",
+                tags: ["user", "phase"],
+                params: UserParamsSchema,
+                body: UserBodySchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...UserWithPhasesSchema,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+            const { value } = request.body;
+
+            const user = await userHelper.getUserWithPhaseById(fastify, id);
+
+            if (user?.phases) {
+                await userHelper.disconnectPhasesFromUser(fastify, id);
+            }
+
+            return await userHelper.connectPhasesToUser(
+                fastify,
+                id,
+                value.map(ids => ids.id),
+            );
         },
     );
 }

@@ -70,3 +70,14 @@ export const UsersAndTagsSchema = Type.Union([
 ]);
 
 export type UsersAndTagsType = Static<typeof UsersAndTagsSchema>;
+
+export const PhasesWithPhaseIdSchema = Type.Union([
+    Type.Array(
+        Type.Object({
+            id: Type.Integer(),
+        }),
+    ),
+    Type.Null(),
+]);
+
+export type PhasesWithPhaseIdType = Static<typeof PhasesWithPhaseIdSchema>;

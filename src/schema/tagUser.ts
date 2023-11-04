@@ -2,6 +2,7 @@ import { Static, Type } from "@sinclair/typebox";
 
 import { UserSchemaWithoutTags } from "./user";
 import { TagWithoutUsersSchema } from "./tag";
+import { PhaseSchema } from "./phase";
 
 export type UserSchemaWithoutTagsType = Static<typeof UserSchemaWithoutTags>;
 
@@ -11,6 +12,13 @@ export const UserSchema = Type.Union([
 ]);
 
 export type UserType = Static<typeof UserSchema>;
+
+export const UserWithPhasesSchema = Type.Union([
+    Type.Intersect([Type.Object({ phases: Type.Optional(Type.Array(PhaseSchema)) }), UserSchemaWithoutTags]),
+    Type.Null(),
+]);
+
+export type UserWithPhasesType = Static<typeof UserWithPhasesSchema>;
 
 export const TagSchema = Type.Object({
     TagWithoutUsersSchema,
