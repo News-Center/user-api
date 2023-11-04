@@ -14,9 +14,13 @@ import {
     UserParamsWithTagIdSchema,
     UserChannelParamsType,
     UserParamsSchema,
+    UserResposeType,
+    UserResposeSchema,
+    UserAutoSubscribeBodyType,
+    UserAutoSubscribeBodySchema,
 } from "../../schema/user";
 
-import { UserSchema, UserType, UserWithPhasesSchema, UserWithPhasesType } from "../../schema/tagUser";
+import { UserSchema, UserType } from "../../schema/tagUser";
 import {
     ChannelsOnUserResponseType,
     ChannelsOnUserSchema,
@@ -464,37 +468,36 @@ export default async function (fastify: FastifyInstance) {
         },
     );
 
-    fastify.patch<{ Body: UserBodyType; Params: UserParamsType; Reply: UserWithPhasesType }>(
-        "/:id/phases",
+    fastify.patch<{ Body: UserAutoSubscribeBodyType; Params: UserParamsType; Reply: UserResposeType }>(
+        "/:id/phases/auto",
         {
             schema: {
-                description: "Add phases to user",
+                description: "Toggle auto subscribe for phases",
                 tags: ["user", "phase"],
                 params: UserParamsSchema,
-                body: UserBodySchema,
+                body: UserAutoSubscribeBodySchema,
                 response: {
                     200: {
                         description: "Successful response",
-                        ...UserWithPhasesSchema,
+                        ...UserResposeSchema,
                     },
                 },
             },
         },
         async (request, _reply) => {
             const { id } = request.params;
-            const { value } = request.body;
+            const { autoSubscribe } = request.body;
 
-            const user = await userHelper.getUserWithPhaseById(fastify, id);
+            const user = await prisma.user.update({
+                where: {
+                    id,
+                },
+                data: {
+                    autoSubscribe,
+                },
+            });
 
-            if (user?.phases) {
-                await userHelper.disconnectPhasesFromUser(fastify, id);
-            }
-
-            return await userHelper.connectPhasesToUser(
-                fastify,
-                id,
-                value.map(ids => ids.id),
-            );
+            return { user, valid: false };
         },
     );
 }

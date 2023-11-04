@@ -11,6 +11,7 @@ export type LDAPUserType = Static<typeof LDAPUserSchema>;
 export const UserSchemaWithoutTags = Type.Object({
     id: Type.Optional(Type.Integer()),
     username: Type.String(),
+    autoSubscribe: Type.Optional(Type.Boolean()),
 });
 
 export const UserResposeSchema = Type.Object({
@@ -47,6 +48,12 @@ export const UserBodySchema = Type.Object({
 });
 
 export type UserBodyType = Static<typeof UserBodySchema>;
+
+export const UserAutoSubscribeBodySchema = Type.Object({
+    autoSubscribe: Type.Boolean(),
+});
+
+export type UserAutoSubscribeBodyType = Static<typeof UserAutoSubscribeBodySchema>;
 
 export const UserTagsSchema = Type.Union([
     Type.Object({
