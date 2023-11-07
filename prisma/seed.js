@@ -1,36 +1,12 @@
 // prisma/seed.js
 
 import { PrismaClient } from "@prisma/client";
+import fs from "fs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-    // MAKE SURE THE NAME IS UNIQUE
-    const phasesToBeCreated = [
-        {
-            id: 1,
-            name: "Phase 1: Fuzzy Search",
-            description:
-                "In der Nachricht und Titel wird nach allen Tags gesucht. Es wird eine Fuzzy (unscharfe) Suche verwendet.",
-        },
-        {
-            id: 2,
-            name: "Phase 2: Fuzzy Thesaurus Search",
-            description:
-                "In der Nachricht und Titel wird nach Synonymen für jedes Tag gesucht. Es handelt sich ebenfalls um eine (strengere) Fuzzy Search.",
-        },
-        {
-            id: 3,
-            name: "Phase 3: Fuzzy LDAP Search",
-            description:
-                "In der Nachricht und Titel wird nach allen LDAP-Tags gesucht. Die LDAP-Tags werden aktuell beim erstmaligen User-Login erstellt, da wir OUs nur auf Userbasis erhalten.",
-        },
-        {
-            id: 4,
-            name: "Phase 4: Fuzzy LDAP Thesaurus Search",
-            description: "In der Nachricht und Titel wird nach Synonymen für jedes LDAP-Tag gesucht.",
-        },
-    ];
+    const phasesToBeCreated = JSON.parse(fs.readFileSync("prisma/phases.json", "utf-8"));
 
     const phasesFromDb = await prisma.phase.findMany({});
     console.log("Phases from DB: ", phasesFromDb.length);
@@ -80,7 +56,7 @@ async function main() {
                 },
             });
 
-            console.log(`User ${user.id} is now subscribed to phases ${newPhaseIds}`);
+            console.log(`User ${user.username} is now also subscribed to phases [${newPhaseIds}]`);
         }
 
         for (const user of usersWithAutoSubscribe) {
