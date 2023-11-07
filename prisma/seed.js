@@ -14,8 +14,11 @@ async function main() {
 
     for (const phase of phasesToBeCreated) {
         await prisma.phase.upsert({
-            where: { name: phase.name },
-            update: {},
+            where: { id: phase.id },
+            update: {
+                name: phase.name,
+                description: phase.description,
+            },
             create: {
                 id: phase.id,
                 name: phase.name,
