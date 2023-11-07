@@ -2,21 +2,21 @@
   {
     "id": 1,
     "name": "Fuzzy Search",
-    "description": "In der Nachricht und Titel wird nach allen Tags gesucht. Es wird eine Fuzzy (unscharfe) Suche verwendet."
+    "description": "In der Nachricht und Titel wird nach allen bestehenden Tags gesucht. Es wird eine Fuzzy (unscharfe) Suche verwendet."
   },
   {
     "id": 2,
-    "name": "Fuzzy Thesaurus Search",
+    "name": "Thesaurus Search",
     "description": "In der Nachricht und Titel wird nach Synonymen für jedes Tag gesucht. Es handelt sich ebenfalls um eine (strengere) Fuzzy Search."
   },
   {
     "id": 3,
-    "name": "Fuzzy LDAP Search",
+    "name": "LDAP Search",
     "description": "In der Nachricht und Titel wird nach allen LDAP-Tags gesucht. Die LDAP-Tags werden aktuell beim erstmaligen User-Login erstellt, da wir OUs nur auf Userbasis erhalten."
   },
   {
     "id": 4,
-    "name": "Fuzzy LDAP Thesaurus Search",
+    "name": "LDAP Thesaurus Search",
     "description": "In der Nachricht und Titel wird nach Synonymen für jedes LDAP-Tag gesucht."
   }
 ]
