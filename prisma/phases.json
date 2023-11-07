@@ -18,5 +18,15 @@
     "id": 4,
     "name": "LDAP Thesaurus Search",
     "description": "In der Nachricht und Titel wird nach Synonymen für jedes LDAP-Tag gesucht."
+  },
+  {
+    "id": 5,
+    "name": "Hamming-Distanz",
+    "description": "In der Nachricht und Titel wird nach allen bestehenden Tags gesucht. Wenn die Hamming-Distanz klein ist, wird das Tag herangezogen."
+  },
+  {
+    "id": 6,
+    "name": "Thesaurus Hamming-Distanz",
+    "description": "In der Nachricht und Titel wird nach Synonymen für jedes Tag gesucht. Wenn die Hamming-Distanz klein ist, wird das Tag herangezogen."
   }
 ]
