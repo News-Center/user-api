@@ -28,5 +28,10 @@
     "id": 6,
     "name": "Thesaurus Hamming-Distanz",
     "description": "In der Nachricht und Titel wird nach Synonymen für jedes Tag gesucht. Wenn die Hamming-Distanz klein ist, wird das Tag herangezogen."
+  },
+  {
+    "id": 7,
+    "name": "External API",
+    "description": "Eine externe API wird verwendet, um die Tags intelligent zu erkennen."
   }
 ]
