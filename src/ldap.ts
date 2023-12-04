@@ -55,11 +55,12 @@ export const getUserInfo = async (username: string, password: string): Promise<{
     }
 
     let ous: string[] = [];
+    let cnArray: (string | null)[] = [];
 
     const searchOptions: SearchOptions = {
         scope: "sub",
         filter: `(uid=${username})`,
-        attributes: ["ou"],
+        attributes: ["memberof", "ou"],
     };
 
     const searchErr = await new Promise<Error | null>((resolve, reject) => {
@@ -69,12 +70,26 @@ export const getUserInfo = async (username: string, password: string): Promise<{
             }
             res.on("searchEntry", entry => {
                 const { ou } = entry.object;
+                const { memberOf } = entry.object;
 
                 if (typeof ou === "string") {
                     ous.push(ou);
                 } else if (Array.isArray(ou)) {
                     ous = ou;
                 }
+
+                if (typeof memberOf === "string") {
+                    cnArray.push(memberOf);
+                } else {
+                    cnArray = memberOf.map(entry => {
+                        const match = entry.match(/cn=([^,]+)/);
+                        return match ? match[1] : null;
+                    });
+                }
+
+                cnArray.forEach(element => {
+                    if (element != null) ous.push(element);
+                });
             });
 
             res.on("error", err => {

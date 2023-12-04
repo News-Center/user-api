@@ -30,6 +30,8 @@ export default async function (fastify: FastifyInstance) {
                     create: { username },
                 });
 
+                // console.log(getUserMemberships(username));
+
                 const userInfo = await getUserInfo(username, password);
 
                 if (userInfo.success) {

@@ -9,8 +9,8 @@ async function main() {
     const phasesToBeCreated = JSON.parse(fs.readFileSync("prisma/phases.json", "utf-8"));
 
     const phasesFromDb = await prisma.phase.findMany({});
-    console.log("Phases from DB: ", phasesFromDb.length);
-    console.log("All phases: ", phasesToBeCreated.length);
+    // console.log("Phases from DB: ", phasesFromDb.length);
+    // console.log("All phases: ", phasesToBeCreated.length);
 
     for (const phase of phasesToBeCreated) {
         await prisma.phase.upsert({
@@ -31,7 +31,7 @@ async function main() {
     const phasesFromDbIds = phasesFromDb.map(phase => phase.id);
 
     const newPhaseIds = phasesToBeCreatedIds.filter(id => !phasesFromDbIds.includes(id));
-    console.log("Phase IDs to be created: ", newPhaseIds);
+    // console.log("Phase IDs to be created: ", newPhaseIds);
 
     if (newPhaseIds.length > 0) {
         const usersWithAutoSubscribe = await prisma.user.findMany({
@@ -42,7 +42,7 @@ async function main() {
                 username: true,
             },
         });
-        console.log("Users with auto subscribe: ", usersWithAutoSubscribe.length);
+        // console.log("Users with auto subscribe: ", usersWithAutoSubscribe.length);
 
         async function subscribeUserToNewPhases(user, newPhaseIds) {
             await prisma.user.update({
@@ -59,7 +59,7 @@ async function main() {
                 },
             });
 
-            console.log(`User ${user.username} is now also subscribed to phases [${newPhaseIds}]`);
+            // console.log(`User ${user.username} is now also subscribed to phases [${newPhaseIds}]`);
         }
 
         for (const user of usersWithAutoSubscribe) {
