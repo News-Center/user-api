@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { UserResposeType, UserResposeSchema, LDAPUserSchema, LDAPUserType } from "../../schema/user";
 import { authUser, getUserInfo } from "../../ldap";
+import { loadAllTags } from "../../loadTags";
 
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
@@ -30,9 +31,11 @@ export default async function (fastify: FastifyInstance) {
                     create: { username },
                 });
 
-                // console.log(getUserMemberships(username));
-
                 const userInfo = await getUserInfo(username, password);
+
+                const allTag = await loadAllTags(username, password);
+
+                // console.log(allTag);
 
                 if (userInfo.success) {
                     userInfo.ous.forEach(async ou => {
@@ -49,6 +52,18 @@ export default async function (fastify: FastifyInstance) {
                                     connect: [{ username }],
                                 },
                                 isLdap: true,
+                            },
+                        });
+                    });
+                }
+
+                if (allTag.success) {
+                    allTag.ous.forEach(async ou => {
+                        await prisma.tag.upsert({
+                            where: { value: ou },
+                            update: {},
+                            create: {
+                                value: ou,
                             },
                         });
                     });
