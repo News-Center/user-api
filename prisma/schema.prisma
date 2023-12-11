@@ -2,6 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -27,6 +28,7 @@ model User {
   preferredEndTime DateTime @db.Time(1) @default("2023-11-04T23:00:00+00:00")
   phases   Phase[]
   channels UserOnChannel[]
+  likes    String[]
 }
 
 model Channel {

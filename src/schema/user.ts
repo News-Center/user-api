@@ -14,6 +14,7 @@ export const UserSchemaWithoutTags = Type.Object({
     autoSubscribe: Type.Optional(Type.Boolean()),
     preferredStartTime: Type.Optional(Type.Union([Type.String(), Type.Date()])),
     preferredEndTime: Type.Optional(Type.Union([Type.String(), Type.Date()])),
+    likes: Type.Optional(Type.Array(Type.String())),
 });
 
 export const UserResposeSchema = Type.Object({
@@ -50,6 +51,12 @@ export const UserBodySchema = Type.Object({
 });
 
 export type UserBodyType = Static<typeof UserBodySchema>;
+
+export const UserBodyLikesSchema = Type.Object({
+    like: Type.String(),
+});
+
+export type UserBodyLikesType = Static<typeof UserBodyLikesSchema>;
 
 export const UserAutoSubscribeBodySchema = Type.Object({
     autoSubscribe: Type.Boolean(),

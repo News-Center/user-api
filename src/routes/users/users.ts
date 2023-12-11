@@ -20,9 +20,18 @@ import {
     UserAutoSubscribeBodySchema,
     UserPreferredTimeBodyType,
     UserPreferredTimeBodySchema,
+    UserBodyLikesSchema,
+    UserBodyLikesType,
+    UserSchemaWithoutTags,
 } from "../../schema/user";
 
-import { UserSchema, UserType, UserWithPhasesSchema, UserWithPhasesType } from "../../schema/tagUser";
+import {
+    UserSchema,
+    UserSchemaWithoutTagsType,
+    UserType,
+    UserWithPhasesSchema,
+    UserWithPhasesType,
+} from "../../schema/tagUser";
 import {
     ChannelsOnUserResponseType,
     ChannelsOnUserSchema,
@@ -91,6 +100,7 @@ export default async function (fastify: FastifyInstance) {
                 },
             });
 
+            fastify.log.info(user);
             return user;
         },
     );
@@ -501,6 +511,65 @@ export default async function (fastify: FastifyInstance) {
                 id,
                 value.map(ids => ids.id),
             );
+        },
+    );
+
+    fastify.patch<{ Body: UserBodyLikesType; Params: UserParamsType; Reply: UserSchemaWithoutTagsType }>(
+        "/:id/likes",
+        {
+            schema: {
+                description: "Add likes to user",
+                tags: ["user", "likes"],
+                params: UserParamsSchema,
+                body: UserBodyLikesSchema,
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...UserSchemaWithoutTags,
+                    },
+                },
+            },
+        },
+        async (request, _reply) => {
+            const { id } = request.params;
+            const { like } = request.body;
+
+            const likes = await prisma.user.findUnique({
+                where: {
+                    id: id,
+                },
+                select: {
+                    likes: true,
+                },
+            });
+
+            // wtf
+            let updatedLikes;
+            if (likes && likes.likes.includes(like)) {
+                // toggle like if already liked
+                fastify.log.info("TOGGLE LIKE");
+                updatedLikes = likes.likes.filter(l => l != like);
+            } else if (likes) {
+                fastify.log.info("ADD LIKE");
+                likes.likes.push(like);
+                updatedLikes = likes.likes;
+            } else {
+                fastify.log.info("likes");
+                updatedLikes = [like];
+            }
+
+            fastify.log.info(updatedLikes);
+            fastify.log.info(updatedLikes.length);
+            const user = await prisma.user.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    likes: updatedLikes,
+                },
+            });
+
+            return user;
         },
     );
 
