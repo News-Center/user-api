@@ -11,6 +11,8 @@ import {
     TagBodyType,
 } from "../../schema/tag";
 
+import { loadTags } from "../../loadTags";
+
 export default async function (fastify: FastifyInstance) {
     const { prisma } = fastify;
 
@@ -85,6 +87,40 @@ export default async function (fastify: FastifyInstance) {
             });
 
             return { tag };
+        },
+    );
+
+    fastify.post<{ Reply: string }>(
+        "/ldap",
+        {
+            schema: {
+                description: "Creates the standard LDAP-Tags in the database",
+                tags: ["tags"],
+                response: {
+                    200: {
+                        description: "Successful response",
+                        ...TagResponseSchema,
+                    },
+                },
+            },
+        },
+        async (_, _reply) => {
+            const tags = await loadTags();
+
+            if (tags.success) {
+                tags.ous.forEach(async ou => {
+                    await prisma.tag.upsert({
+                        where: { value: ou },
+                        update: {},
+                        create: {
+                            value: ou,
+                            isLdap: true,
+                        },
+                    });
+                });
+            }
+
+            return "created";
         },
     );
 
