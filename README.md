@@ -1,6 +1,16 @@
 # User Api
 
-The User-API is used to manage user data
+# General Purpose
+
+The `User API` is designed to perform essential tasks related to user authentication and management within the system. The key functionalities include:
+
+- **User Login**:
+The User API facilitates user login by providing specific routes that are called by the UI. This process allows users to securely log in using their credentials, specifically utilizing Lightweight Directory Access Protocol (LDAP) data for authentication.
+
+- **LDAP Tags**:
+Upon the user's initial login, the User API retrieves LDAP data to fetch all relevant tags. Subsequently, these tags are associated with the user's profile. This ensures that, during the first login, the system gathers LDAP-related information and assigns appropriate tags to the user, enhancing the user's profile with relevant data.
+
+
 
 ## Getting Started
 
@@ -9,7 +19,7 @@ The User-API is used to manage user data
 - Node.js Version 16
 - npm Version 8
 
-### Installation
+### Dev-Setup
 
 1. Clone the repo
 ```bash
@@ -28,3 +38,8 @@ The User-API is used to manage user data
 ```bash
   npx prisma migrate dev
 ```
+
+# Production-Setup
+
+Use `news-kraken` to deploy the entire application to a server. For more information see refer to the news-kraken repository.
+
